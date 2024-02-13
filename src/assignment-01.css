@@ -1,0 +1,158 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #ffffff;
+    background-color: #000000;
+    box-sizing: inherit;
+}
+
+.wrpr {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.cont {
+    max-width: 500px;
+    margin: 50px auto 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.in {
+    background-image: none;
+    box-shadow: none;
+}
+
+.title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-bottom: 10px;
+}
+
+.add,
+.sub,
+.in {
+    flex: none;
+    width: 28px;
+    height: 28px;
+    outline: none;
+    background-color: gray;
+    border-radius: 100%;
+    padding: 5px;
+    color: white;
+    font-size: 14px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid black;
+    font-weight: bold;
+}
+
+.add,
+.sub {
+    opacity: 0;
+}
+
+.add:hover,
+.sub:hover {
+    cursor: pointer;
+}
+
+.lvl:hover .add,
+.lvl:hover .sub {
+    cursor: default;
+    opacity: 1;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type='number'] {
+    -moz-appearance: textfield;
+}
+
+.lvl {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.lvl-wrpr {
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 18px;
+}
+
+.lvl-wrpr1 {
+    top: 140px !important;
+}
+
+.lvl1 {
+    border-bottom: 120px solid #ff0000;
+    border-left: 73px solid transparent;
+    border-right: 73px solid transparent;
+    height: 180px;
+    width: 0;
+}
+
+.lvl2 {
+    border-bottom: 60px solid #ff8800;
+    border-left: 40px solid transparent;
+    border-right: 40px solid transparent;
+    height: 10px;
+    width: 240px;
+    margin-top: 10px;
+}
+
+.lvl3 {
+    border-bottom: 60px solid #fffb00;
+    border-left: 40px solid transparent;
+    border-right: 40px solid transparent;
+    height: 10px;
+    width: 330px;
+    margin-top: 10px;
+}
+
+.lvl4 {
+    border-bottom: 60px solid #0080ff;
+    border-left: 40px solid transparent;
+    border-right: 40px solid transparent;
+    width: 410px;
+}
+
+.lvl5 {
+    border-bottom: 60px solid #6b2222;
+    border-left: 40px solid transparent;
+    border-right: 40px solid transparent;
+    width: 490px;
+}
+
+.lvl6 {
+    border-bottom: 60px solid #00ff00;
+    border-left: 40px solid transparent;
+    border-right: 40px solid transparent;
+    width: 570px;
+}
+
+
