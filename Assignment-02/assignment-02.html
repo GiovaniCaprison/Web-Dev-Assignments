@@ -1,0 +1,75 @@
+<!-- I have no real references to add here. As most of it (especially the js) came from my preexisting knowledge.
+The only thing I can think of is W3Schools to look up some CSS and HTML properties. -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta
+            charset="UTF-8"
+    />
+    <meta
+            http-equiv="X-UA-Compatible"
+            content="IE=edge"
+    />
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+    />
+    <link
+            rel="preconnect"
+            href="https://fonts.googleapis.com"
+    />
+    <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com" crossorigin
+    />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap"
+            rel="stylesheet"
+    />
+    <link
+            rel="stylesheet"
+            href="./css/assignment-02.css"
+    />
+    <title>
+      Simon Says Game
+    </title>
+  </head>
+    <body>
+      <div class="wrapper">
+        <!-- Main Circle -->
+        <div class="game-circle">
+          <!-- High score, Control Button, Curr Score -->
+          <div class="game-stats">
+            <div class="high-score" id="highScore">00</div>
+            <button class="control-btn" id="controlButton">START</button>
+            <div class="curr-score" id="currScore">00</div>
+          </div>
+          <!-- Game Status -->
+          <div
+                  class="menu"
+                  id="menu"
+          ></div>
+          <!-- Color Buttons -->
+          <button
+                  class="buttons button-1 green"
+                  data-value="0"
+          ></button>
+          <button
+                  class="buttons button-2 red"
+                  data-value="1"
+          ></button>
+          <button
+                  class="buttons button-3 blue"
+                  data-value="2"
+          ></button>
+          <button
+                  class="buttons button-4 yellow"
+                  data-value="3"
+          ></button>
+        </div>
+      </div>
+    <script
+            src="./js/assignment-02.js"
+    ></script>
+  </body>
+</html>
