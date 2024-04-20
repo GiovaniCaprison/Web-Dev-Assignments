@@ -1,0 +1,278 @@
+<!-- frontend -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CRUD Operations Demo</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<div id="console" style="background-color: #f4f4f4; padding: 10px; margin: 10px 0; border: 1px solid #ddd;"></div>
+<button id="createUser">Create User</button>
+<br />
+<br />
+<br />
+<button id="searchUser">Search User</button>
+<br />
+<label for="searchName"></label><input type="text" id="searchName" placeholder="Enter name to search">
+<br />
+<label for="searchId">Or</label>
+<br />
+<input type="text" id="searchId" placeholder="Enter user ID">
+<br />
+<br />
+<br />
+<button id="updateUser">Update User</button>
+<br />
+<label for="updateUserId"></label><input type="text" id="updateUserId" placeholder="User ID to change">
+<br />
+<label for="updateFirstName"></label><input type="text" id="updateFirstName" placeholder="New First Name">
+<br />
+<label for="updateLastName"></label><input type="text" id="updateLastName" placeholder="New Last Name">
+<br />
+<label for="updateTitle"></label><input type="text" id="updateTitle" placeholder="New Title">
+<br />
+<label for="updateMobile"></label><input type="text" id="updateMobile" placeholder="New Mobile">
+<br />
+<label for="updateEmail"></label><input type="text" id="updateEmail" placeholder="New Email Address">
+<br />
+<label for="updateAddressLine1"></label><input type="text" id="updateAddressLine1" placeholder="Address Line 1">
+<br />
+<label for="updateTown"></label><input type="text" id="updateTown" placeholder="Town">
+<br />
+<label for="updateCountyCity"></label><input type="text" id="updateCountyCity" placeholder="County/City">
+<br />
+<label for="updateEircode"></label><input type="text" id="updateEircode" placeholder="Eircode">
+<br />
+<br />
+<br />
+<button id="deleteUser">Delete User</button>
+<br />
+<label for="deleteUserId"></label><input type="text" id="deleteUserId" placeholder="Enter user ID to delete">
+<br />
+<br />
+<br />
+<button id="showDB">Show Entire Database</button>
+<br />
+<br />
+<br />
+<button id="populateDB">Populate Database</button>
+<br />
+<br />
+<button id="wipeDB">Wipe Database</button>
+<script>
+    $(document).ready(function() {
+        // Create User functionality
+        $('#createUser').click(function() {
+            const userData = {
+                title: "Mr",
+                first_name: "Louis",
+                surname: "Grennell",
+                full_name: "Louis Grennell",
+                mobile: "0838337057",
+                email_address: "louisgrennell@gmail.com",
+                addresses: [{
+                    address_line_1: "410 Terry Ave N",
+                    town: "Seattle",
+                    county_city: "Washington",
+                    eircode: "98109"
+                }]
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:3000/createUser",
+                data: JSON.stringify(userData),
+                contentType: "application/json",
+                error: function() {
+                    $('#console').append(`<p>email already in use</p>`);
+                },
+                success: function(response) {
+                    console.log(response);
+                    let userDetails = `<p>User Created Successfully!</p>`;
+                    userDetails += `<p>User ID: ${response.userId}</p>`;
+                    userDetails += `<p>Title: ${userData.title}</p>`;
+                    userDetails += `<p>First Name: ${userData.first_name}</p>`;
+                    userDetails += `<p>Surname: ${userData.surname}</p>`;
+                    userDetails += `<p>Full Name: ${userData.full_name}</p>`;
+                    userDetails += `<p>Mobile: ${userData.mobile}</p>`;
+                    userDetails += `<p>Email Address: ${userData.email_address}</p>`;
+                    userDetails += `<p>Addresses:</p>`;
+                    userData.addresses.forEach((address, index) => {
+                        userDetails += `<p>Address ${index + 1}: ${address.address_line_1}, ${address.town}, ${address.county_city}, ${address.eircode}</p>`;
+                    });
+
+                    $('#console').append(userDetails);
+                },
+            });
+        });
+
+        // Search User functionality
+        $('#searchUser').click(function() {
+            const searchName = $('#searchName').val();
+            const searchId = $('#searchId').val();
+
+            let url = `http://localhost:3000/searchUsers?`;
+            if (searchId) {
+                url += `id=${searchId}`;
+            } else if (searchName) {
+                url += `name=${searchName}`;
+            } else {
+                alert("Please enter a search term.");
+                return;
+            }
+
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function(response) {
+                    // Clear the console and prepare for new output
+                    $("#console").html('<p>Search Results:</p>');
+                    console.log(response);
+                    if(response.length === 0) {
+                        $('#console').append('<p>No users found.</p>');
+                    } else {
+                        response.forEach(user => {
+                            let userInfo = `<div style="margin-bottom: 20px;">`;
+                            userInfo += '<p> ------------------------------------------------------------------ </p>';
+                            userInfo += `<p>User ID: ${user.user_id}</p>`;
+                            userInfo += `<p>Title: ${user.title}</p>`;
+                            userInfo += `<p>First Name: ${user.first_name}</p>`;
+                            userInfo += `<p>Full Name: ${user.full_name}</p>`;
+                            userInfo += `<p>Surname: ${user.surname}</p>`;
+                            userInfo += `<p>Mobile: ${user.mobile}</p>`;
+                            userInfo += `<p>Email Address: ${user.email_address}</p>`;
+                            if(user.addresses && user.addresses.length > 0) {
+                                user.addresses.forEach((address, index) => {
+                                    userInfo += `<p>Address ${index + 1}: ${address.address_line_1}, ${address.town}, ${address.county_city}, ${address.eircode ? address.eircode : 'N/A'}</p>`;
+                                });
+                            } else {
+                                userInfo += `<p>No addresses available.</p>`;
+                            }
+                            userInfo += '<p> ------------------------------------------------------------------ </p>';
+                            userInfo += `</div>`;
+                            $('#console').append(userInfo);
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    $('#console').append(`<p>Error: ${error}</p>`);
+                }
+            });
+        });
+
+        // Update User functionality
+        $('#updateUser').click(function() {
+            const userId = $('#updateUserId').val(); // Get the user ID from the input field
+            const updatedUserData = {
+                first_name: $('#updateFirstName').val(),
+                last_name: $('#updateLastName').val(),
+                title: $('#updateTitle').val(),
+                mobile: $('#updateMobile').val(),
+                email_address: $('#updateEmail').val(),
+                address: {
+                    address_line_1: $('#updateAddressLine1').val(),
+                    town: $('#updateTown').val(),
+                    county_city: $('#updateCountyCity').val(),
+                    eircode: $('#updateEircode').val()
+                }
+            };
+
+            $.ajax({
+                type: "PUT",
+                url: `http://localhost:3000/updateUser/${userId}`,
+                data: JSON.stringify(updatedUserData),
+                contentType: "application/json",
+                success: function(response) {
+                    $('#console').html(`<p>User Updated: ${JSON.stringify(response)}</p>`);
+                },
+                error: function(xhr, status, error) {
+                    $('#console').html(`<p>Error: ${error}</p>`);
+                }
+            });
+        });
+
+        // Delete User functionality
+        $('#deleteUser').click(function() {
+            const userId = $('#deleteUserId').val(); // Get the user ID from the input field
+
+            $.ajax({
+                type: "DELETE",
+                url: `http://localhost:3000/deleteUser/${userId}`,
+                success: function(response) {
+                    $('#console').html(`<p>${JSON.stringify(response)}</p>`); // Update the console with the response
+                },
+                error: function(xhr, status, error) {
+                    $('#console').html(`<p>Error: ${error}</p>`); // Update the console with error message
+                }
+            });
+        });
+
+        // Wipe Database button click
+        $('#wipeDB').click(function() {
+            if (confirm("Are you sure you want to wipe the database? This action cannot be undone.")) {
+                $.ajax({
+                    type: "DELETE",
+                    url: "http://localhost:3000/wipeDB",
+                    success: function(response) {
+                        $('#console').html(`<p>${JSON.stringify(response)}</p>`);
+                    },
+                    error: function(xhr, status, error) {
+                        $('#console').html(`<p>Error: ${error}</p>`);
+                    }
+                });
+            }
+        });
+
+        // Populate Database button click
+        $('#populateDB').click(function() {
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:3000/populateDB",
+                success: function(response) {
+                    $('#console').html(`<p>${JSON.stringify(response)}</p>`);
+                },
+                error: function(xhr, status, error) {
+                    $('#console').html(`<p>Error: ${error}</p>`);
+                }
+            });
+        });
+
+        // Show Entire Database button click
+        $('#showDB').click(function() {
+            $.ajax({
+                type: "GET",
+                url: "http://localhost:3000/getAllUsers",
+                success: function(response) {
+                    $('#console').html(''); // Clear previous content
+                    response.forEach(user => {
+                        let userInfo = `<div style="margin-bottom: 20px;">`;
+                        userInfo += '<p> ------------------------------------------------------------------ </p>';
+                        userInfo += `<p>User ID: ${user.user_id}</p>`;
+                        userInfo += `<p>Title: ${user.title}</p>`;
+                        userInfo += `<p>First Name: ${user.first_name}</p>`;
+                        userInfo += `<p>Full Name: ${user.first_name} ${user.surname}</p>`; // Assuming full name is a combination of first and last name
+                        userInfo += `<p>Surname: ${user.surname}</p>`;
+                        userInfo += `<p>Mobile: ${user.mobile}</p>`;
+                        userInfo += `<p>Email Address: ${user.email_address}</p>`;
+                        if(user.addresses && user.addresses.length > 0) {
+                            user.addresses.forEach((address, index) => {
+                                userInfo += `<p>Address ${index + 1}: ${address.address_line_1}, ${address.town}, ${address.county_city}, ${address.eircode ? address.eircode : 'N/A'}</p>`;
+                            });
+                        } else {
+                            userInfo += `<p>No addresses available.</p>`;
+                        }
+                        userInfo += '<p> ------------------------------------------------------------------ </p>';
+                        userInfo += `</div>`;
+                        $('#console').append(userInfo);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    $('#console').html(`<p>Error: ${error}</p>`);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
